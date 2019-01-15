@@ -1,0 +1,101 @@
+!urxvt
+URxvt.intensityStyle: false
+URxvt.scrollBar: false
+
+URxvt.keysym.Shift-Control-V: eval:paste_clipboard
+URxvt.keysym.Shift-Control-C: eval:selection_to_clipboard
+
+URxvt.iso14755: false
+URxvt.iso14755_52: false
+
+URxvt.keysym.C-Up:     font-size:increase
+URxvt.keysym.C-Down:   font-size:decrease
+URxvt.keysym.C-S-Up:   font-size:incglobal
+URxvt.keysym.C-S-Down: font-size:decglobal
+URxvt.keysym.C-equal:  font-size:reset
+URxvt.keysym.C-slash:  font-size:show
+URxvt.keysym.Control-Left:    \033[1;5D
+URxvt.keysym.Control-Right:    \033[1;5C
+URxvt*skipBuiltinGlyphs: true
+
+!URxvt.font: xft:Iosevka:size=11
+URxvt.font: xft:Monaco:size=11
+URxvt.letterSpace: -1
+
+URxvt.transparent: true
+URxvt.shading: 15
+
+*.autohint: 0
+*.lcdfilter: lcddefault
+*.hintstyle: hintfull
+*.hinting: true
+*.antialias: true
+*.rgba: rgb
+
+URxvt.depth: 32
+URxvt.internalBorder: 5
+URxvt*saveLines:12000
+
+URxvt.perl-ext-common: default,matcher,clipboard,font-size
+URxvt.url-launcher: /usr/bin/google-chrome-stable
+URxvt.matcher.button: 1
+URxvt.matcher.rend.0: Bold fg6
+
+! URxvt.bell-command: notify-send "rxvt-unicode: bell!"
+
+! Colors
+*.boldMode: true
+*.colorBDMode: false
+!*.colorBD: cyan
+
+! Base16 Eighties
+#define col1 #292b2e
+#define col2 #ee3333
+#define col3 #20ad80
+#define col4 #dd75dd
+#define col5 #875faf
+#define col6 #d75f87
+#define col7 #4f97d7
+#define col8 #ececec
+
+*.foreground:   #33ccee
+*.background:   rgba:2900/2b00/2e00/dede
+*.cursorColor:  col8
+*.cursorBlink: true
+
+*.color0:       rgba:2900/2b00/2e00/dede
+*.color1:       col2
+*.color2:       col3
+*.color3:       col4
+*.color4:       col5
+*.color5:       col6
+*.color6:       col7
+*.color7:       col8
+*.color8:       rgba:2900/2b00/2e00/dede
+*.color9:       col2
+*.color10:      col3
+*.color11:      col4
+*.color12:      col5
+*.color13:      col6
+*.color14:      col7
+*.color15:      col8
+! *.color16:      base09
+! *.color17:      base0F
+! *.color18:      base01
+! *.color19:      base02
+! *.color20:      base04
+! *.color21:      base06
+
+Xft.dpi: 144
+
+rofi.color-enabled: true
+rofi.color-window: #141021, #c16772, #9568a1
+rofi.color-normal: #141021, #ffeefc, #312842, #c16772, #ffeefc
+rofi.color-active: #141021, #c05c47, #312842, #c05c47, #ffeefc
+rofi.color-urgent: #141021, #e4b226, #312842, #e4b226, #ffeefc
+rofi.width: 800
+rofi.padding: 50
+rofi.font: PragmataPro Nerd Font 18
+rofi.bw: 3
+rofi.separator-style: solid
+rofi.hide-scrollbar: true

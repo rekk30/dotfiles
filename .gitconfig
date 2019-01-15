@@ -1,0 +1,10 @@
+[user]
+	name = Sava Shevchenko
+	email = savaover@gmail.com
+[core]
+	excludesfile = /home/admin/.gitexcludes
+	editor = vim
+[http]
+	sslVerify = false
+[alias]
+	tree = log --graph --decorate --pretty=oneline --abbrev-commit

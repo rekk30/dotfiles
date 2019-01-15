@@ -1,0 +1,188 @@
+;-------------------------------------------------------------------------------
+;   V A R I A B L E S
+;-------------------------------------------------------------------------------
+monitor = ${env:MONITOR:eDP-1}
+
+[colors]
+
+# OLD COLORS
+# background = #141021
+# foreground = #c4b7c5
+# background-alt = #444
+# foreground-alt = #555
+# primary = #ffb52a
+# secondary = #e60053
+# alert = #bd2c40
+
+background = #131313
+background-alt = #333
+
+foreground = #b2b2b2
+foreground-alt = #ee3333
+
+trans = #DA292b2e
+white = #eee
+grey = #444444
+pink = #d75f87
+blue = #4f97d7
+purple = #b967ff
+green = #20ad80
+red = #ee3333
+
+;-------------------------------------------------------------------------------
+;   A D V A N C E     B A R
+;-------------------------------------------------------------------------------
+[bar/advance]
+monitor=${env:MONITOR:eDP-1}
+width = 100%
+height = 27
+radius = 1.0
+fixed-center = false
+border-size = 2
+#border-color = #131313
+separator =
+enable-ipc = true
+
+font-0 = PragmataPro Nerd Font:pixelsize=12:weight=bold;0
+#font-0 = IosevkaMono:pixelsize=12;weight=bold;0
+#font-0 = Hack:pixelsize=12:weight=bold;2
+font-1 = FontAwesome5Free:style=Solid:pixelsize=11
+font-2 = FontAwesome5Brands:style=Solid:pixelsize=11
+font-3 = Weather Icons:size=12;1
+
+modules-left = toggle
+modules-center = cpu temperature memory filesystem wireless-network
+modules-right = powermenu
+
+tray-position = right
+tray-background = ${colors.background}
+tray-padding = 4
+
+# cursor-click = none
+# double-click-right = polybar-msg -p %pid% cmd toggle
+
+;-------------------------------------------------------------------------------
+;   M O D U L E S
+;-------------------------------------------------------------------------------
+
+[module/toggle]
+type = custom/ipc
+hook-0 = echo 
+initial = 1
+click-left = polybar-msg cmd toggle
+format-foreground = ${colors.purple}
+
+[module/cpu]
+type = internal/cpu
+interval = 0.5
+format = <label>  <ramp-coreload>
+format-padding = 2
+label = %percentage%%
+format-prefix = " CPU "
+format-prefix-foreground = ${colors.purple}
+
+ramp-coreload-0 = ▁
+ramp-coreload-1 = ▂
+ramp-coreload-2 = ▃
+ramp-coreload-3 = ▄
+ramp-coreload-4 = ▅
+ramp-coreload-5 = ▆
+ramp-coreload-6 = ▇
+ramp-coreload-7 = █
+
+[module/temperature]
+type = internal/temperature
+interval = 1
+thermal-zone = 1
+warn-temperature = 90
+hwmon-path = /sys/devices/platform/coretemp.0/hwmon/hwmon3/temp1_input
+format = <label>
+format-padding = 2
+format-warn = <label-warn>
+format-warn-padding = 2
+label = %temperature%
+label-warn = %temperature%
+label-warn-foreground = ${colors.red}
+format-prefix = " TEMP "
+format-prefix-foreground = ${colors.purple}
+
+[module/memory]
+type = internal/memory
+interval = 1
+format = <label>
+format-padding = 2
+label = %mb_used% / %mb_total%
+format-prefix = " RAM "
+format-prefix-foreground = ${colors.purple}
+
+[module/filesystem]
+type = internal/fs
+mount-0 = /
+interval = 30
+fixed-values = false
+spacing = 4
+label-mounted = %fsname% %used% / %total% (%free%)
+format-mounted-prefix = " SSD "
+format-mounted-prefix-foreground = ${colors.purple}
+label-unmounted = %mountpoint%: not mounted
+label-unmounted-foreground = ${colors.red}
+
+[module/wireless-network]
+type = internal/network
+interface = wlp2s0
+interval = 0.5
+accumulate-stats = false
+format-connected = <label-connected>
+format-connected-padding = 2
+format-disconnected = <label-disconnected>
+format-disconnected-padding = 2
+format-packetloss = <animation-packetloss> <label-connected>
+label-connected = %essid%(%signal%) %ifname% (%local_ip%) %downspeed:9%  %upspeed:9%
+label-disconnected = Disconnected
+format-connected-prefix = " WI-FI "
+format-connected-prefix-foreground = ${colors.purple}
+format-disconnected-prefix = " WI-FI "
+format-disconnected-prefix-foreground = ${colors.red}
+
+[module/powermenu]
+type = custom/menu
+label-open = 
+label-close = cancel
+label-open-foreground = ${colors.purple}
+
+label-close-background = #312842
+label-close-foreground = #ffeefc
+label-open-padding-left = 4
+label-open-padding-right = 3
+label-close-padding = 3
+
+menu-0-0 = lock
+menu-0-0-exec = ~/scripts/lock.sh
+menu-0-0-background = #312842
+menu-0-0-foreground = #c05c47
+menu-0-0-padding-right = 3
+
+menu-0-1 = reboot
+menu-0-1-exec = menu-open-1
+menu-0-1-background = #312842
+menu-0-1-foreground = #c05c47
+menu-0-1-padding-right = 3
+
+menu-0-2 = power off
+menu-0-2-exec = menu-open-2
+menu-0-2-background = #312842
+menu-0-2-foreground = #c05c47
+menu-0-2-padding-right = 3
+
+menu-1-0 = reboot?
+menu-1-0-exec = reboot
+menu-1-0-background = #312842
+menu-1-0-foreground = #e4b226
+menu-1-0-padding-right = 3
+
+menu-2-0 = power off?
+menu-2-0-exec = poweroff
+menu-2-0-background = #312842
+menu-2-0-foreground = #e4b226
+menu-2-0-padding-right = 3
+

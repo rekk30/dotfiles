@@ -1,9 +1,0 @@
-# The following lines were added by compinstall
-
-zstyle ':completion:*' completer _expand _complete _ignored
-zstyle ':completion:*' list-colors ''
-zstyle :compinstall filename '/home/admin/.zshrc'
-
-autoload -Uz compinit
-compinit
-# End of lines added by compinstall

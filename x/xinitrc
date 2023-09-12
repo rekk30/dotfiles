@@ -1,0 +1,6 @@
+xrdb ~/.Xresources
+
+setxkbmap "us,ru,ua" ",winkeys" "grp:caps_toggle"
+xset r rate 160 40
+systemctl --user import-environment DISPLAY
+exec i3

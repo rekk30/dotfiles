@@ -1,0 +1,5 @@
+[commit]
+	gpgsign = true
+[user]
+	email = savaover@gmail.com
+	name = Sava Shevchenko

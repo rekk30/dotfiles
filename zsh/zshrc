@@ -1,0 +1,67 @@
+#export ADOTDIR="/home/a454514@vcn.ds.volvo.net/.antigen/"
+#source ${ADOTDIR}/antigen.zsh
+#antigen use oh-my-zsh
+
+#BRANCH="master"
+#COCODE_URL="http://cocode.se:8080/CoCode/cocode-zsh.git"
+
+#antigen bundle --url=${COCODE_URL} --branch=${BRANCH} --loc=cocode.zsh
+#antigen bundle --url=${COCODE_URL} --branch=${BRANCH} --loc=plugins/sdk_version.zsh
+#antigen bundle --url=${COCODE_URL} --branch=${BRANCH} --loc=themes/calle.zsh-theme
+export ZSH=$HOME/.oh-my-zsh
+ZSH_THEME="theunraveler"
+
+plugins=(
+  git
+  dotenv
+  golang
+  fzf
+  fd
+  docker
+  copyfile
+  copypath
+  kubectl
+  sudo
+  thefuck
+  dirhistory
+  ag
+  colorize
+  wd
+  vault
+  ripgrep
+  zsh-interactive-cd
+  starship
+  zsh-autosuggestions
+  zsh-syntax-highlighting
+)
+
+export STARSHIP_CONFIG=${HOME}/.config/starship.toml
+eval "$(starship init zsh)"
+
+source $ZSH/oh-my-zsh.sh
+
+PATH="$PATH:$HOME/bin:/usr/local/go/bin:$HOME/go/bin"
+alias r=ranger
+alias deadbeef=/opt/deadbeef/bin/deadbeef
+alias viva="screen -S viva -d -m vivaldi --disable-gpu-shader-disk-cache"
+
+alias pbcopy='xclip -selection clipboard'
+alias pbpaste='xclip -selection clipboard -o'
+
+#antigen bundle git
+#antigen bundle git-extras
+#antigen apply
+
+#alias python3="/usr/bin/python3"
+#alias python="python3"
+# function preexec() {
+#  timer=$(($(date +%s%0N)/1000000))
+# }
+# function precmd() {
+#  if [ $timer ]; then
+# now=$(($(date +%s%0N)/1000000))
+# elapsed=$(($now-$timer))
+# export RPROMPT="%F{cyan}${elapsed}ms %{$reset_color%}"
+# unset timer
+#  fi
+# }

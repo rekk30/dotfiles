@@ -1,0 +1,3 @@
+files:
+  - src: i3/config
+    dst: .config/i3/config

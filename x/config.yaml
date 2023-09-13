@@ -1,0 +1,5 @@
+files:
+  - src: x/xinitrc
+    dst: .xinitrc
+  - src: x/Xresources
+    dst: .Xresources

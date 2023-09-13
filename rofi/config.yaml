@@ -1,0 +1,7 @@
+files:
+  - src: rofi/config.rasi
+    dst: .config/rofi/config.rasi
+  - src: rofi/theme.rasi
+    dst: .config/rofi/theme.rasi
+  - src: rofi/theme2.rasi
+    dst: .config/rofi/theme2.rasi

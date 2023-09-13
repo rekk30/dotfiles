@@ -1,0 +1,7 @@
+files:
+  - src: bash/bash_logout
+    dst: .bash_logout
+  - src: bash/bashrc
+    dst: .bashrc
+  - src: bash/profile
+    dst: .profile

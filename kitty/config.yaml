@@ -1,0 +1,5 @@
+files:
+  - src: kitty/kitty.conf
+    dst: .config/kitty/kitty.conf
+  - src: kitty/def.conf
+    dst: .config/kitty/colors/def.conf

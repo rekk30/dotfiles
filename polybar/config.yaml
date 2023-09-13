@@ -1,0 +1,15 @@
+files:
+  - src: polybar/config.ini
+    dst: .config/polybar/config.ini
+  - src: polybar/launch.sh
+    dst: .config/polybar/launch.sh
+  - src: polybar/scripts/nvidia-smi-temp.sh
+    dst: .config/polybar/scripts/nvidia-smi-temp.sh
+  - src: polybar/scripts/nvidia-smi-vram.sh
+    dst: .config/polybar/scripts/nvidia-smi-vram.sh
+  - src: polybar/scripts/pipewire.sh
+    dst: .config/polybar/scripts/pipewire.sh
+  - src: polybar/scripts/radeon-gpu.sh
+    dst: .config/polybar/scripts/radeon-gpu.sh
+  - src: polybar/scripts/system-nvidia-smi.sh
+    dst: .config/polybar/scripts/system-nvidia-smi.sh

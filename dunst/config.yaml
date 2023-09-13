@@ -1,0 +1,3 @@
+files:
+  - src: dunst/dunstrc
+    dst: .config/dunst/dunstrc

@@ -1,0 +1,5 @@
+files:
+  - src: zsh/zshrc
+    dst: .zshrc
+  - src: zsh/zprofile
+    dst: .zprofile

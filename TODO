@@ -10,3 +10,6 @@ polybar depends on the hw
 file permissions
 check integrity
 protected secrets (rclone token etc)
+dpi setting
+fonts
+install golang ??

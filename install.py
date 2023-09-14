@@ -7,6 +7,7 @@ import logging as log
 import filecmp
 import shutil
 import argparse
+import subprocess
 from enum import Enum
 
 import yaml
@@ -17,7 +18,7 @@ HOME_DIR: str = os.path.expanduser("~")
 BACKUP_DIR: str = DOTFILES_DIR + "/backup"
 
 
-def deep_file_copy(src: str, dst: str):
+def deep_file_copy(src: str, dst: str) -> None:
   if not os.path.exists(src):
     raise Exception(f"File does not exist: {src}")
 
@@ -33,7 +34,7 @@ class FilePairStatus(Enum):
   OBSOLETE = 1
   MISSING = 2
 
-  def __str__(self):
+  def __str__(self) -> None:
     strings: dict[FilePairStatus, str] = {
         FilePairStatus.CURRENT: "Up to date",
         FilePairStatus.OBSOLETE: "Obsolete",
@@ -43,7 +44,7 @@ class FilePairStatus(Enum):
 
 
 class FilePair:
-  def __init__(self, src: str, dst: str):
+  def __init__(self, src: str, dst: str) -> None:
     self.__src: str = src
     self.__dst: str = dst
     self.status: FilePairStatus = FilePairStatus.OBSOLETE
@@ -61,7 +62,7 @@ class FilePair:
   def dst(self) -> str:
     return HOME_DIR + "/" + self.__dst
 
-  def create_symlink(self):
+  def create_symlink(self) -> None:
     log.info(f"Symlink {self.src()} -> {self.dst()}")
 
     exist: bool = os.path.exists(self.dst())
@@ -75,19 +76,49 @@ class FilePair:
     os.symlink(self.src(), self.dst())
 
 
-def read_files_from_config(file: str) -> list[FilePair]:
-  with open(file) as f:
-    data = yaml.load(f, Loader=SafeLoader)
-    return [FilePair(val["src"], val["dst"]) for val in data["files"]]
+class Procedure:
+  def execute(self) -> int:
+    raise NotImplementedError("Subclass must implement this method")
 
 
-def get_all_configs() -> list[str]:
-  lst: list[str] = []
+class Command(Procedure):
+  def __init__(self, command: str) -> None:
+    super().__init__()
+    self.__command = command
+
+  def execute(self) -> int:
+    log.debug(f"Execute command: \"{self.__command}\"")
+    process = subprocess.Popen(
+        self.__command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
+    ret = process.wait()
+    if ret != 0:
+      err = process.communicate()[1]
+      log.debug(f"Command failed:\n{err}")
+    return ret
+
+
+class Module:
+  def __init__(self, folder: str) -> None:
+    self.folder = str
+    self.config_file = os.path.join(folder, "config.yaml")
+
+    f = open(self.config_file)
+    self.data = yaml.load(f, Loader=SafeLoader)
+
+  def files(self) -> list[FilePair]:
+    return [FilePair(val["src"], val["dst"]) for val in self.data["files"]]
+
+  def scripts(self) -> list[Procedure]:
+    return [Command(val["command"]) for val in self.data["scripts"]]
+
+
+def get_all_modules() -> list[Module]:
+  lst: list[Module] = []
   for filename in os.listdir("."):
     package = os.path.join(".", filename)
     conf = os.path.join(package, "config.yaml")
     if os.path.isdir(package) and os.path.exists(conf):
-      lst.append(conf)
+      lst.append(Module(package))
   return lst
 
 
@@ -103,23 +134,26 @@ def main(args):
 
   args = parser.parse_args()
 
-  configs = get_all_configs()
-  files: list[FilePair] = []
+  updated: bool = False
 
-  for config in configs:
-    files.extend(read_files_from_config(config))
+  modules = get_all_modules()
 
-  absolete: list[FilePair] = [
-      file for file in files if file.status == FilePairStatus.OBSOLETE]
+  for module in modules:
+    module_change: bool = False
+    for file in module.files():
+      if file.status == FilePairStatus.OBSOLETE:
+        print(f'{file.dst()} -> {str(file.status)}')
+        module_change = True
+        updated = True
+        if not args.dry:
+          file.create_symlink()
 
-  if len(absolete) == 0:
+    if module_change and not args.dry:
+      for command in module.scripts():
+        command.execute()
+
+  if not updated:
     print("Everything up to date")
-
-  for file in files:
-    if file.status == FilePairStatus.OBSOLETE:
-      print(f'{file.dst()} -> {str(file.status)}')
-      if not args.dry:
-        file.create_symlink()
 
 
 if __name__ == "__main__":

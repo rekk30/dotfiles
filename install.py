@@ -81,10 +81,24 @@ class Procedure:
     raise NotImplementedError("Subclass must implement this method")
 
 
+def make_procedure(config) -> Procedure:
+  if "command" in config:
+    return Command(config)
+  raise f"Incorrect command configuration\n{config}"
+
+
 class Command(Procedure):
-  def __init__(self, command: str) -> None:
+  def __init__(self, config) -> None:
     super().__init__()
-    self.__command = command
+    self.__command = config["command"]
+    self.strict = False
+    self.sudo = False
+
+    if "strict" in config:
+      self.strict = config["strict"]
+
+    if "sudo" in config:
+      self.strict = config["sudo"]
 
   def execute(self) -> int:
     log.debug(f"Execute command: \"{self.__command}\"")
@@ -109,7 +123,7 @@ class Module:
     return [FilePair(val["src"], val["dst"]) for val in self.data["files"]]
 
   def scripts(self) -> list[Procedure]:
-    return [Command(val["command"]) for val in self.data["scripts"]]
+    return [make_procedure(val) for val in self.data["scripts"]]
 
 
 def get_all_modules() -> list[Module]:

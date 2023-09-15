@@ -3,3 +3,6 @@ files:
     dst: .zshrc
   - src: zsh/zprofile
     dst: .zprofile
+scripts:
+  - command: something
+    sudo: true

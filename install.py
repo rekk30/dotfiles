@@ -8,6 +8,7 @@ import filecmp
 import shutil
 import argparse
 import subprocess
+import getpass
 from enum import Enum
 
 import yaml
@@ -16,6 +17,39 @@ from yaml.loader import SafeLoader
 DOTFILES_DIR: str = os.path.dirname(os.path.abspath(sys.argv[0]))
 HOME_DIR: str = os.path.expanduser("~")
 BACKUP_DIR: str = DOTFILES_DIR + "/backup"
+
+
+def check_user_pass(password: str) -> bool:
+  process = subprocess.Popen(
+      "sudo -S true", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, text=True)
+  process.communicate(password)
+  return process.wait() == 0
+
+
+def exit_sudo():
+  process = subprocess.Popen(
+      "sudo -k", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, text=True)
+  process.wait()
+
+
+def get_user_pass():
+  global USER_PASSWORD  # TODO probably a terrible thing
+  USER_PASSWORD = getpass.getpass("Enter user password: ")
+  if not check_user_pass(USER_PASSWORD):
+    log.error('Wrong password', stack_info=True)
+    os._exit(1)
+  exit_sudo()
+
+
+def enter_sudo():
+  # TODO do I need this
+  process = subprocess.Popen(
+      "sudo -S true", shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, stdin=subprocess.PIPE, text=True)
+  process.communicate(USER_PASSWORD)
+  ret = process.wait()
+  if ret != 0:
+    log.error("Failed to enter sudo", stack_info=True)
+    os._exit(1)
 
 
 def deep_file_copy(src: str, dst: str) -> None:
@@ -98,16 +132,26 @@ class Command(Procedure):
       self.strict = config["strict"]
 
     if "sudo" in config:
-      self.strict = config["sudo"]
+      self.sudo = config["sudo"]
 
   def execute(self) -> int:
     log.debug(f"Execute command: \"{self.__command}\"")
+    if self.sudo:
+      log.info("Entering sudo...")
+      enter_sudo()
+
     process = subprocess.Popen(
         self.__command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
     ret = process.wait()
     if ret != 0:
       err = process.communicate()[1]
       log.debug(f"Command failed:\n{err}")
+    else:
+      out = process.communicate()[0]
+      log.debug(f"Command output:\n{out}")
+
+    if self.sudo:
+      exit_sudo()
     return ret
 
 
@@ -141,6 +185,9 @@ def main(args):
   log.getLogger().setLevel(log.DEBUG)
   log.info(f"Dotfiles folder: {DOTFILES_DIR}")
   log.info(f"Home folder: {HOME_DIR}")
+
+  print(f"Current user: {os.getenv('USER')}")
+  get_user_pass()
 
   parser = argparse.ArgumentParser()
 

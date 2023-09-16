@@ -4,5 +4,5 @@ files:
   - src: zsh/zprofile
     dst: .zprofile
 scripts:
-  - command: something
+  - command: sudo chsh -s $(which zsh) ${USER}
     sudo: true

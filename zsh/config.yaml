@@ -4,5 +4,6 @@ files:
   - src: zsh/zprofile
     dst: .zprofile
 scripts:
+  - command: sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
   - command: sudo chsh -s $(which zsh) ${USER}
     sudo: true

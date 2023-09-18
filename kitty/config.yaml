@@ -3,3 +3,7 @@ files:
     dst: .config/kitty/kitty.conf
   - src: kitty/def.conf
     dst: .config/kitty/colors/def.conf
+scripts:
+  - command: mkdir /home/${USER}/.local
+    strict: false
+  - command: curl -L https://sw.kovidgoyal.net/kitty/installer.sh | sh /dev/stdin

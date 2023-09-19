@@ -15,3 +15,4 @@ fonts
 install golang ??
 cross-distro packages
 scripts distro constraints
+alias

@@ -1,4 +1,5 @@
 import os
+import sys
 import logging as log
 from enum import Enum
 import shutil
@@ -52,15 +53,15 @@ class Config:
   def dst(self) -> str:
     return HOME_DIR + "/" + self.__dst
 
-  def create_symlink(self) -> None:
-    log.info(f"Symlink {self.src()} -> {self.dst()}")
+  # def create_symlink(self) -> None:
+  #   log.info(f"Symlink {self.src()} -> {self.dst()}")
 
-    exist: bool = os.path.exists(self.dst())
+  #   exist: bool = os.path.exists(self.dst())
 
-    if exist:
-      backup_file: str = BACKUP_DIR + "/" + self.__src
-      deep_file_copy(self.dst(), backup_file)
-      os.remove(self.dst())
-      log.warning(f"Old file has been backed up: {backup_file}")
+  #   if exist:
+  #     backup_file: str = BACKUP_DIR + "/" + self.__src
+  #     deep_file_copy(self.dst(), backup_file)
+  #     os.remove(self.dst())
+  #     log.warning(f"Old file has been backed up: {backup_file}")
 
-    os.symlink(self.src(), self.dst())
+    # os.symlink(self.src(), self.dst())

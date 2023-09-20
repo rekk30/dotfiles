@@ -3,7 +3,16 @@ import yaml
 from yaml.loader import SafeLoader
 
 from config import Config
-from scripts import Procedure
+from scripts import Procedure, make_procedure
+from installer import Node
+
+
+def get_nodes(yaml) -> list[Node]:
+  nodes: list[Node] = []
+  if "scripts" in yaml:
+    nodes.extend([make_procedure(val) for val in yaml["scripts"]])
+
+  return nodes
 
 
 class Module:

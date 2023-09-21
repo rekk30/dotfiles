@@ -1,5 +1,5 @@
-from installer import Node, Installer
-from module import get_nodes
+from .installer import Node, Installer
+from .module import get_nodes
 
 
 class Package(Node):
@@ -11,3 +11,8 @@ class Package(Node):
 
     if "apt" in config:
       self.name = config["apt"]
+
+  def visit(self, inst: Installer):
+    for node in self.nodes:
+      node.visit(inst)
+    inst.installPackage(self.name)

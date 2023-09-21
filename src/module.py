@@ -2,15 +2,20 @@ import os
 import yaml
 from yaml.loader import SafeLoader
 
-from config import Config
-from scripts import Procedure, make_procedure
-from installer import Node
+from .config import Config
+from .scripts import Procedure, make_procedure
+from .installer import Node, Installer
+from .package import Package
 
 
 def get_nodes(yaml) -> list[Node]:
   nodes: list[Node] = []
   if "scripts" in yaml:
     nodes.extend([make_procedure(val) for val in yaml["scripts"]])
+  if "packages" in yaml:
+    nodes.extend([Package(val) for val in yaml["packages"]])
+  if "files" in yaml:
+    nodes.extend([Config(val) for val in yaml["packages"]])
 
   return nodes
 
@@ -21,13 +26,19 @@ class Module:
     self.config_file = os.path.join(folder, "config.yaml")
 
     f = open(self.config_file)
-    self.data = yaml.load(f, Loader=SafeLoader)
+    data = yaml.load(f, Loader=SafeLoader)
+    self.nodes = get_nodes(data)
 
-  def files(self) -> list[Config]:
-    return [Config(val["src"], val["dst"]) for val in self.data["files"]]
+  def visit(self, inst: Installer):
+    for node in self.nodes:
+      node.visit(inst)
+    inst.installCommand(self.__command, self.sudo)
 
-  def scripts(self) -> list[Procedure]:
-    return [make_procedure(val) for val in self.data["scripts"]]
+  # def files(self) -> list[Config]:
+  #   return [Config(val["src"], val["dst"]) for val in self.data["files"]]
+
+  # def scripts(self) -> list[Procedure]:
+  #   return [make_procedure(val) for val in self.data["scripts"]]
 
 
 def get_all_modules() -> list[Module]:

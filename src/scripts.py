@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
-from installer import Node, Installer
-from module import get_nodes
+from .installer import Node, Installer
+from .module import get_nodes
 
 
 class Procedure(Node):
@@ -30,6 +30,11 @@ class Command(Procedure):
 
     if "sudo" in config:
       self.sudo = config["sudo"]
+
+  def visit(self, inst: Installer):
+    for node in self.nodes:
+      node.visit(inst)
+    inst.installCommand(self.__command, self.sudo)
 
   # def execute(self) -> int:
   #   log.debug(f"Execute command: \"{self.__command}\"")

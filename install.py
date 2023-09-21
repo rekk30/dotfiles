@@ -12,6 +12,9 @@ import getpass
 import yaml
 from yaml.loader import SafeLoader
 
+from src.module import get_all_modules
+from src.installer import DefaultInstaller
+
 
 def check_user_pass(password: str) -> bool:
   process = subprocess.Popen(
@@ -48,9 +51,9 @@ def enter_sudo():
 
 def main(args):
   log.basicConfig()
-  log.getLogger().setLevel(log.DEBUG)
-  log.info(f"Dotfiles folder: {DOTFILES_DIR}")
-  log.info(f"Home folder: {HOME_DIR}")
+  # log.getLogger().setLevel(log.DEBUG)
+  # log.info(f"Dotfiles folder: {DOTFILES_DIR}")
+  # log.info(f"Home folder: {HOME_DIR}")
 
   print(f"Current user: {os.getenv('USER')}")
   get_user_pass()
@@ -64,23 +67,27 @@ def main(args):
   updated: bool = False
 
   modules = get_all_modules()
+  installer = DefaultInstaller()
 
   for module in modules:
-    module_change: bool = False
-    for file in module.files():
-      if file.status == ConfigStatus.OBSOLETE:
-        print(f'{file.dst()} -> {str(file.status)}')
-        module_change = True
-        updated = True
-        if not args.dry:
-          file.create_symlink()
+    module.visit(installer)
 
-    if module_change and not args.dry:
-      for command in module.scripts():
-        command.execute()
+  # for module in modules:
+  #   module_change: bool = False
+  #   for file in module.files():
+  #     if file.status == ConfigStatus.OBSOLETE:
+  #       print(f'{file.dst()} -> {str(file.status)}')
+  #       module_change = True
+  #       updated = True
+  #       if not args.dry:
+  #         file.create_symlink()
 
-  if not updated:
-    print("Everything up to date")
+  #   if module_change and not args.dry:
+  #     for command in module.scripts():
+  #       command.execute()
+
+  # if not updated:
+  #   print("Everything up to date")
 
 
 if __name__ == "__main__":

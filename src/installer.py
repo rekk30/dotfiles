@@ -26,3 +26,21 @@ class Node(ABC):
   @abstractmethod
   def visit(self, inst: Installer):
     pass
+
+
+class DefaultInstaller(Installer):  # TODO change name
+  def installPackage(self, name: str, repository: int = 0, dir: int = 0):
+    print(f"installing package {name}")
+
+  @abstractmethod
+  # TODO change permission type
+  def installConfig(self, src: str, dst: str, permissions: int = 777):
+    print(f"installing config {src} -> {dst}")
+
+  @abstractmethod
+  def installScript(self, file: str, sudo: bool = False) -> bool:
+    print(f"installing script {file}")
+
+  @abstractmethod
+  def installCommand(self, command: str, sudo: bool = False) -> bool:
+    print(f"installing command {command}")

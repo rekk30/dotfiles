@@ -4,6 +4,9 @@ import logging as log
 from enum import Enum
 import shutil
 
+from .installer import Installer
+from .module import get_nodes
+
 DOTFILES_DIR: str = os.path.dirname(os.path.abspath(sys.argv[0]))
 HOME_DIR: str = os.path.expanduser("~")
 BACKUP_DIR: str = DOTFILES_DIR + "/backup"
@@ -35,10 +38,11 @@ class ConfigStatus(Enum):
 
 
 class Config:
-  def __init__(self, src: str, dst: str) -> None:
-    self.__src: str = src
-    self.__dst: str = dst
+  def __init__(self, config) -> None:
+    self.__src: str = config["src"]
+    self.__dst: str = config["dst"]
     self.status: ConfigStatus = ConfigStatus.OBSOLETE
+    self.nodes = get_nodes(config)
 
     if not os.path.exists(self.src()):
       self.status = ConfigStatus.MISSING
@@ -52,6 +56,11 @@ class Config:
 
   def dst(self) -> str:
     return HOME_DIR + "/" + self.__dst
+
+  def visit(self, inst: Installer):
+    for node in self.nodes:
+      node.visit(inst)
+    inst.installConfig(self.src(), self.dst())
 
   # def create_symlink(self) -> None:
   #   log.info(f"Symlink {self.src()} -> {self.dst()}")

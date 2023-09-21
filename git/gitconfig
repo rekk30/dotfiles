@@ -3,3 +3,5 @@
 [user]
 	email = savaover@gmail.com
 	name = Sava Shevchenko
+[core]
+	excludesfile = /home/rekk/.gitignore

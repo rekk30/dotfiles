@@ -23,9 +23,16 @@ class Installer(ABC):
 
 
 class Node(ABC):
+  def __init__(self) -> None:
+    self.nodes: list[Node] = []
+
+  def add_node(self, node: Node):
+    self.nodes.append(node)
+
   @abstractmethod
   def visit(self, inst: Installer):
-    pass
+    for node in self.nodes:
+      node.visit(inst)
 
 
 class DefaultInstaller(Installer):  # TODO change name

@@ -42,7 +42,6 @@ class Config:
     self.__src: str = config["src"]
     self.__dst: str = config["dst"]
     self.status: ConfigStatus = ConfigStatus.OBSOLETE
-    self.nodes = get_nodes(config)
 
     if not os.path.exists(self.src()):
       self.status = ConfigStatus.MISSING

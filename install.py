@@ -14,6 +14,7 @@ from yaml.loader import SafeLoader
 
 from src.module import get_all_modules
 from src.installer import DefaultInstaller
+from src.builder import Builder
 
 
 def check_user_pass(password: str) -> bool:
@@ -56,7 +57,7 @@ def main(args):
   # log.info(f"Home folder: {HOME_DIR}")
 
   print(f"Current user: {os.getenv('USER')}")
-  get_user_pass()
+  # get_user_pass()
 
   parser = argparse.ArgumentParser()
 
@@ -66,7 +67,8 @@ def main(args):
 
   updated: bool = False
 
-  modules = get_all_modules()
+  builder = Builder()
+  modules = get_all_modules(builder)
   installer = DefaultInstaller()
 
   for module in modules:

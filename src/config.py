@@ -5,7 +5,7 @@ from enum import Enum
 import shutil
 
 from .installer import Installer
-from .module import get_nodes
+from .installer import Node
 
 DOTFILES_DIR: str = os.path.dirname(os.path.abspath(sys.argv[0]))
 HOME_DIR: str = os.path.expanduser("~")
@@ -37,8 +37,9 @@ class ConfigStatus(Enum):
     return strings[ConfigStatus(self.value)]
 
 
-class Config:
+class Config(Node):
   def __init__(self, config) -> None:
+    super().__init__()
     self.__src: str = config["src"]
     self.__dst: str = config["dst"]
     self.status: ConfigStatus = ConfigStatus.OBSOLETE
@@ -57,8 +58,7 @@ class Config:
     return HOME_DIR + "/" + self.__dst
 
   def visit(self, inst: Installer):
-    for node in self.nodes:
-      node.visit(inst)
+    super().visit(inst)
     inst.installConfig(self.src(), self.dst())
 
   # def create_symlink(self) -> None:

@@ -6,33 +6,23 @@ from .config import Config
 from .scripts import Procedure, make_procedure
 from .installer import Node, Installer
 from .package import Package
+from .builder import Builder
 
 
-def get_nodes(yaml) -> list[Node]:
-  nodes: list[Node] = []
-  if "scripts" in yaml:
-    nodes.extend([make_procedure(val) for val in yaml["scripts"]])
-  if "packages" in yaml:
-    nodes.extend([Package(val) for val in yaml["packages"]])
-  if "files" in yaml:
-    nodes.extend([Config(val) for val in yaml["packages"]])
-
-  return nodes
-
-
-class Module:
-  def __init__(self, folder: str) -> None:
+class Module(Node):
+  def __init__(self, folder: str, builder: Builder) -> None:
+    super().__init__()
     self.folder = str
     self.config_file = os.path.join(folder, "config.yaml")
 
     f = open(self.config_file)
     data = yaml.load(f, Loader=SafeLoader)
-    self.nodes = get_nodes(data)
+    deps = builder.dependencies(data)
+    for dep in deps:
+      self.add_node(dep)
 
   def visit(self, inst: Installer):
-    for node in self.nodes:
-      node.visit(inst)
-    inst.installCommand(self.__command, self.sudo)
+    super().visit(inst)
 
   # def files(self) -> list[Config]:
   #   return [Config(val["src"], val["dst"]) for val in self.data["files"]]
@@ -41,11 +31,11 @@ class Module:
   #   return [make_procedure(val) for val in self.data["scripts"]]
 
 
-def get_all_modules() -> list[Module]:
+def get_all_modules(builder: Builder) -> list[Module]:
   lst: list[Module] = []
   for filename in os.listdir("."):
     package = os.path.join(".", filename)
     conf = os.path.join(package, "config.yaml")
     if os.path.isdir(package) and os.path.exists(conf):
-      lst.append(Module(package))
+      lst.append(Module(package, builder))
   return lst

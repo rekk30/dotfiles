@@ -1,26 +1,9 @@
 import os
-import sys
-import logging as log
 from enum import Enum
-import shutil
 
 from .installer import Installer
-from .installer import Node
-
-DOTFILES_DIR: str = os.path.dirname(os.path.abspath(sys.argv[0]))
-HOME_DIR: str = os.path.expanduser("~")
-BACKUP_DIR: str = DOTFILES_DIR + "/backup"
-
-
-def deep_file_copy(src: str, dst: str) -> None:
-  if not os.path.exists(src):
-    raise Exception(f"File does not exist: {src}")
-
-  dest_dir: str = os.path.dirname(dst)
-  if not os.path.exists(dest_dir):
-    os.makedirs(dest_dir)
-
-  shutil.copy(src, dst)
+from .node import Node
+from .const import DOTFILES_DIR, HOME_DIR
 
 
 class ConfigStatus(Enum):
@@ -59,17 +42,5 @@ class Config(Node):
 
   def visit(self, inst: Installer):
     super().visit(inst)
-    inst.installConfig(self.src(), self.dst())
-
-  # def create_symlink(self) -> None:
-  #   log.info(f"Symlink {self.src()} -> {self.dst()}")
-
-  #   exist: bool = os.path.exists(self.dst())
-
-  #   if exist:
-  #     backup_file: str = BACKUP_DIR + "/" + self.__src
-  #     deep_file_copy(self.dst(), backup_file)
-  #     os.remove(self.dst())
-  #     log.warning(f"Old file has been backed up: {backup_file}")
-
-    # os.symlink(self.src(), self.dst())
+    if self.status != ConfigStatus.CURRENT:
+      inst.installConfig(self.src(), self.dst())

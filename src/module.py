@@ -2,10 +2,8 @@ import os
 import yaml
 from yaml.loader import SafeLoader
 
-from .config import Config
-from .scripts import Procedure, make_procedure
-from .installer import Node, Installer
-from .package import Package
+from .installer import Installer
+from .node import Node
 from .builder import Builder
 
 
@@ -23,12 +21,6 @@ class Module(Node):
 
   def visit(self, inst: Installer):
     super().visit(inst)
-
-  # def files(self) -> list[Config]:
-  #   return [Config(val["src"], val["dst"]) for val in self.data["files"]]
-
-  # def scripts(self) -> list[Procedure]:
-  #   return [make_procedure(val) for val in self.data["scripts"]]
 
 
 def get_all_modules(builder: Builder) -> list[Module]:

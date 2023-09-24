@@ -1,4 +1,5 @@
-from .installer import Node, Installer
+from .installer import Installer
+from .node import Node
 
 
 class Package(Node):

@@ -1,13 +1,12 @@
 from abc import ABC, abstractmethod
-from .installer import Node, Installer
+from .installer import Installer
+from .node import Node
 
 
 class Procedure(Node):
   @abstractmethod
   def visit(self, inst: Installer):
     pass
-  # def execute(self) -> int:
-  #   raise NotImplementedError("Subclass must implement this method")
 
 
 def make_procedure(config) -> Procedure:
@@ -19,7 +18,7 @@ def make_procedure(config) -> Procedure:
 class Command(Procedure):
   def __init__(self, config) -> None:
     super().__init__()
-    self.__command = config["command"]
+    self.command = config["command"]
     self.strict = False
     self.sudo = False
 
@@ -31,24 +30,4 @@ class Command(Procedure):
 
   def visit(self, inst: Installer):
     super().visit(inst)
-    inst.installCommand(self.__command, self.sudo)
-
-  # def execute(self) -> int:
-  #   log.debug(f"Execute command: \"{self.__command}\"")
-  #   if self.sudo:
-  #     log.info("Entering sudo...")
-  #     enter_sudo()
-
-  #   process = subprocess.Popen(
-  #       self.__command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, text=True)
-  #   ret = process.wait()
-  #   if ret != 0:
-  #     err = process.communicate()[1]
-  #     log.debug(f"Command failed:\n{err}")
-  #   else:
-  #     out = process.communicate()[0]
-  #     log.debug(f"Command output:\n{out}")
-
-  #   if self.sudo:
-  #     exit_sudo()
-  #   return ret
+    inst.installCommand(self.command, self.sudo)

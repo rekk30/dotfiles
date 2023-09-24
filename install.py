@@ -13,7 +13,7 @@ import yaml
 from yaml.loader import SafeLoader
 
 from src.module import get_all_modules
-from src.installer import DefaultInstaller
+from src.dry_installer import DryInstaller
 from src.builder import Builder
 
 
@@ -52,11 +52,11 @@ def enter_sudo():
 
 def main(args):
   log.basicConfig()
-  # log.getLogger().setLevel(log.DEBUG)
+  log.getLogger().setLevel(log.DEBUG)
   # log.info(f"Dotfiles folder: {DOTFILES_DIR}")
   # log.info(f"Home folder: {HOME_DIR}")
 
-  print(f"Current user: {os.getenv('USER')}")
+  log.info(f"Current user: {os.getenv('USER')}")
   # get_user_pass()
 
   parser = argparse.ArgumentParser()
@@ -69,7 +69,7 @@ def main(args):
 
   builder = Builder()
   modules = get_all_modules(builder)
-  installer = DefaultInstaller()
+  installer = DryInstaller()
 
   for module in modules:
     module.visit(installer)

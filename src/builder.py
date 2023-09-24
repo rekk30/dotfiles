@@ -1,4 +1,4 @@
-from .installer import Node, NodeType
+from .node import Node, NodeType
 from .config import Config
 from .package import Package
 from .scripts import make_procedure, Procedure

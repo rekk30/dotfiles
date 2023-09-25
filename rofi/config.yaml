@@ -5,5 +5,5 @@ files:
     dst: .config/rofi/theme.rasi
   - src: rofi/theme2.rasi
     dst: .config/rofi/theme2.rasi
-packages:
-  - apt: rofi
+# packages:
+#   - apt: rofi

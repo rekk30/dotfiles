@@ -43,4 +43,4 @@ class Config(Node):
   def visit(self, inst: Installer):
     super().visit(inst)
     if self.status != ConfigStatus.CURRENT:
-      inst.installConfig(self.src(), self.dst())
+      inst.install_config(self.src(), self.dst())

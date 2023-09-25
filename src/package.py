@@ -13,4 +13,4 @@ class Package(Node):
 
   def visit(self, inst: Installer):
     super().visit(inst)
-    inst.installPackage(self.name)
+    inst.install_package(self.name)

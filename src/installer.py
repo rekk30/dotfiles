@@ -1,32 +1,38 @@
 from abc import ABC, abstractmethod
 
 
-class PackageIntaller(ABC):
+class PackageInstaller(ABC):
   @abstractmethod
   # TODO change package dir
   # TODO change package repository
-  def installPackage(self, name: str, repository: int = 0, dir: int = 0):
+  def install_package(self, name: str, repository: int = 0, dir: int = 0):
     pass
 
 
-class ConfigIntaller(ABC):
+class PackageChecker(ABC):
+  @abstractmethod
+  def is_installed(self, name: str) -> bool:
+    pass
+
+
+class ConfigInstaller(ABC):
   @abstractmethod
   # TODO change permission type
-  def installConfig(self, src: str, dst: str, permissions: int = 777):
+  def install_config(self, src: str, dst: str, permissions: int = 777):
     pass
 
 
 class ScriptInstaller(ABC):
   @abstractmethod
-  def installScript(self, file: str, sudo: bool = False) -> bool:
+  def install_script(self, file: str, sudo: bool = False) -> bool:
     pass
 
 
 class CommandInstaller(ABC):
   @abstractmethod
-  def installCommand(self, command: str, sudo: bool = False) -> bool:
+  def install_command(self, command: str, sudo: bool = False) -> bool:
     pass
 
 
-class Installer(PackageIntaller, ConfigIntaller, ScriptInstaller, CommandInstaller):
+class Installer(PackageInstaller, ConfigInstaller, ScriptInstaller, CommandInstaller):
   pass

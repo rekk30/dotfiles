@@ -14,6 +14,8 @@ from yaml.loader import SafeLoader
 
 from src.module import get_all_modules
 from src.dry_installer import DryInstaller
+from src.anterior import InstallerAnterior
+from src.apt import Apt
 from src.builder import Builder
 
 
@@ -69,10 +71,19 @@ def main(args):
 
   builder = Builder()
   modules = get_all_modules(builder)
-  installer = DryInstaller()
+
+  ant: InstallerAnterior
+
+  if args.dry:
+    d = DryInstaller()
+    apt = Apt()
+    ant = InstallerAnterior(d, apt, d, d, d)
+  # installer = DryInstaller()
 
   for module in modules:
-    module.visit(installer)
+    module.visit(ant)
+
+  ant.execute()
 
   # for module in modules:
   #   module_change: bool = False

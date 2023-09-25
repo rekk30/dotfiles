@@ -30,4 +30,4 @@ class Command(Procedure):
 
   def visit(self, inst: Installer):
     super().visit(inst)
-    inst.installCommand(self.command, self.sudo)
+    inst.install_command(self.command, self.sudo)

@@ -16,6 +16,7 @@ from src.module import get_all_modules
 from src.dry_installer import DryInstaller
 from src.anterior import InstallerAnterior
 from src.apt import Apt
+from src.ubuntu import UbuntuInstaller
 from src.builder import Builder
 
 
@@ -72,13 +73,15 @@ def main(args):
   builder = Builder()
   modules = get_all_modules(builder)
 
+  apt = Apt()
   ant: InstallerAnterior
 
   if args.dry:
     d = DryInstaller()
-    apt = Apt()
     ant = InstallerAnterior(d, apt, d, d, d)
-  # installer = DryInstaller()
+  else:
+    ubuntu = UbuntuInstaller()
+    ant = InstallerAnterior(apt, apt, ubuntu, ubuntu, ubuntu)
 
   for module in modules:
     module.visit(ant)

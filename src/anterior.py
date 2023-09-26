@@ -32,11 +32,12 @@ class InstallerAnterior(Installer):
 
   def execute(self):
     for src, dst in self.files:
-      self.config.install_config(src, dst, 777)
+      self.config.install_config(src=src, dst=dst)
+      self.config.install_config()
+
+    for pac in self.packages:
+      if not self.package_ch.is_installed(pac):
+        self.package.install_command(cmd, sudo)
 
     for cmd, sudo in self.commands:
       self.command.install_command(cmd, sudo)
-
-    for package in self.packages:
-      if not self.package_ch.is_installed(package):
-        self.packages.install_command(cmd, sudo)

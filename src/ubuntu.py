@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import logging as log
 
-from .installer import Installer
+from .installer import ConfigInstaller, CommandInstaller, ScriptInstaller
 from .const import BACKUP_DIR
 
 
@@ -19,12 +19,9 @@ def deep_file_copy(src: str, dst: str) -> None:
   shutil.copy(src, dst)
 
 
-class UbuntuInstaller(Installer):
-  def installPackage(self, name: str, repository: int = 0, dir: int = 0):
-    raise NotImplementedError
-
-  # TODO change permission type
-  def installConfig(self, src: str, dst: str, permissions: int = 777):
+class UbuntuInstaller(ConfigInstaller, CommandInstaller, ScriptInstaller):
+  def install_config(self, src: str, dst: str, permissions: int = 777):
+    print(f"src: {src}, dst: {dst}")
     log.info(f"Symlink {src} -> {dst}")
 
     exist: bool = os.path.exists(dst)
@@ -37,10 +34,10 @@ class UbuntuInstaller(Installer):
 
     os.symlink(src, dst)
 
-  def installScript(self, file: str, sudo: bool = False) -> bool:
+  def install_script(self, file: str, sudo: bool = False) -> bool:
     raise NotImplementedError
 
-  def installCommand(self, command: str, sudo: bool = False) -> bool:
+  def install_command(self, command: str, sudo: bool = False) -> bool:
     log.debug(f"Execute command: \"{command}\"")
     if sudo:
       log.info("Entering sudo...")
